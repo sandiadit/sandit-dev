@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\ExperienceController; // tambah ini
+use App\Http\Controllers\Dashboard\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,6 +20,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('dashboard/experiences', ExperienceController::class)
          ->names('dashboard.experiences') // tambah ini
          ->except(['show']);
+
+         Route::resource('dashboard/projects', ProjectController::class)
+         ->names('dashboard.projects')
+         ->except(['show']);    
 });
 
 require __DIR__.'/auth.php';

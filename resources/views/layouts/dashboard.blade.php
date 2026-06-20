@@ -13,7 +13,7 @@
             <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
             <li><a href="{{ route('profile.edit') }}">Profile</a></li>
             <li><a href="{{ route('dashboard.experiences.index') }}">Experiences</a></li>
-            <li><a href="#">Projects</a></li>
+            <li><a href="{{ route('dashboard.projects.index') }}">Projects</a></li>
             <li><a href="#">Docs</a></li>
             <li><a href="#">Contact</a></li>
         </ul>
