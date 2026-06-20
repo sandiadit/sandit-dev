@@ -31,4 +31,8 @@ Route::middleware('auth')->group(function () {
          ->except(['show']);
 });
 
+Route::get('/contact', function () {
+    return view('contact.index');
+})->name('contact');
+
 require __DIR__.'/auth.php';
