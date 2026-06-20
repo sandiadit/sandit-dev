@@ -19,7 +19,10 @@ class PublicController extends Controller
     {
         $profile = $this->profileRepository->get();
         $experiences = $this->experienceRepository->getAll();
-        return view('public.home', compact('profile', 'experiences'));
+        $allProjects = $this->projectRepository->getPublic();
+        $latestProjects = $allProjects->take(3);
+        $projectsCount = $allProjects->count();
+        return view('public.home', compact('profile', 'experiences', 'latestProjects', 'projectsCount'));
     }
 
     public function projects()

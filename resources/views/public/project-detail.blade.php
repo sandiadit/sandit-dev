@@ -3,55 +3,96 @@
 @section('title', $project->title)
 
 @section('content')
-    <div style="margin-bottom:0.5rem">
-        <a href="{{ route('projects') }}">← Kembali ke Projects</a>
-    </div>
 
-    {{-- Detail Project --}}
-    <div style="margin-bottom:2.5rem">
-        <h1 style="margin-bottom:0.25rem">{{ $project->title }}</h1>
-        <span style="font-size:0.8rem; color:#888">[{{ $project->status }}]</span>
-        @if($project->tech_stack)
-            <p style="color:#888; font-size:0.9rem; margin-top:0.25rem">{{ $project->tech_stack }}</p>
-        @endif
-        <p style="margin-top:1rem; line-height:1.6">{{ $project->description }}</p>
-        <div style="display:flex; gap:1rem; margin-top:0.75rem">
-            @if($project->repo_url)
-                <a href="{{ $project->repo_url }}" target="_blank">🔗 Repo</a>
-            @endif
-            @if($project->demo_url)
-                <a href="{{ $project->demo_url }}" target="_blank">🌐 Demo</a>
-            @endif
+    {{-- Header --}}
+    <section class="bg-gray-900 text-white px-8 py-20">
+        <div class="max-w-5xl mx-auto">
+            <a href="{{ route('projects') }}"
+               class="text-gray-400 text-sm hover:text-indigo-400 transition mb-8 inline-block">
+                ← Back to Projects
+            </a>
+            <div class="flex items-start justify-between gap-8">
+                <div>
+                    <p class="text-indigo-400 font-semibold text-sm tracking-widest uppercase mb-3">
+                        — Project Detail
+                    </p>
+                    <h1 class="text-5xl font-bold mb-4">
+                        {{ $project->title }}<span class="text-indigo-400">.</span>
+                    </h1>
+                    @if($project->tech_stack)
+                        <p class="text-indigo-400 text-sm font-medium mb-4">{{ $project->tech_stack }}</p>
+                    @endif
+                    <p class="text-gray-400 leading-relaxed max-w-xl">{{ $project->description }}</p>
+                </div>
+                <div class="shrink-0 flex flex-col gap-3 pt-2">
+                    <span class="text-xs font-medium px-3 py-1 rounded text-center
+                        {{ $project->status === 'completed' ? 'bg-green-500 text-white' : '' }}
+                        {{ $project->status === 'ongoing' ? 'bg-indigo-500 text-white' : '' }}
+                        {{ $project->status === 'archived' ? 'bg-gray-600 text-gray-300' : '' }}">
+                        {{ ucfirst($project->status) }}
+                    </span>
+                    @if($project->repo_url)
+                        <a href="{{ $project->repo_url }}" target="_blank"
+                           class="bg-white text-gray-900 px-4 py-2 text-sm font-semibold hover:bg-indigo-400 hover:text-white transition text-center">
+                            GitHub →
+                        </a>
+                    @endif
+                    @if($project->demo_url)
+                        <a href="{{ $project->demo_url }}" target="_blank"
+                           class="border border-white text-white px-4 py-2 text-sm font-semibold hover:bg-white hover:text-gray-900 transition text-center">
+                            Live Demo →
+                        </a>
+                    @endif
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
     {{-- Docs --}}
-    @if($docs->count())
-        <h2 style="margin-bottom:1.5rem">Documentation</h2>
-        @foreach($docs as $doc)
-            <div style="margin-bottom:2rem; padding-bottom:2rem; border-bottom:1px solid #eee">
-                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem">
-                    <h3 style="margin:0">{{ $doc->title }}</h3>
-                    <span style="font-size:0.75rem; color:#888; background:#f0f0f0; padding:0.2rem 0.5rem; border-radius:4px">
-                        {{ str_replace('_', ' ', $doc->type) }}
-                    </span>
-                </div>
+    <section class="max-w-5xl mx-auto px-8 py-20">
+        @if($docs->count())
+            <p class="text-indigo-600 font-semibold text-sm tracking-widest uppercase mb-2">— Documentation</p>
+            <h2 class="text-4xl font-bold mb-12">Project Notes</h2>
 
-                <div style="line-height:1.7">
-                    {!! renderMarkdown($doc->content) !!}
-                </div>
+            <div class="space-y-12">
+                @foreach($docs as $doc)
+                    <div class="grid grid-cols-4 gap-8">
+                        {{-- Sidebar doc --}}
+                        <div class="col-span-1">
+                            <span class="inline-block text-xs font-semibold px-2 py-1 bg-indigo-100 text-indigo-700 rounded mb-2">
+                                {{ ucfirst(str_replace('_', ' ', $doc->type)) }}
+                            </span>
+                            <p class="text-gray-400 text-xs">
+                                {{ $doc->created_at->format('d M Y') }}
+                            </p>
+                        </div>
 
-                @if($doc->images)
-                    <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top:1rem">
-                        @foreach($doc->images as $image)
-                            <img src="{{ Storage::url($image) }}" alt=""
-                                 style="max-width:100%; border:1px solid #ccc; border-radius:4px">
-                        @endforeach
+                        {{-- Content doc --}}
+                        <div class="col-span-3 border-l border-gray-200 pl-8">
+                            <h3 class="text-xl font-bold mb-4">{{ $doc->title }}</h3>
+                            <div class="prose prose-gray max-w-none text-gray-600 leading-relaxed">
+                                {!! renderMarkdown($doc->content) !!}
+                            </div>
+
+                            @if($doc->images)
+                                <div class="flex flex-wrap gap-4 mt-6">
+                                    @foreach($doc->images as $image)
+                                        <img src="{{ Storage::url($image) }}" alt=""
+                                             class="max-w-full rounded border border-gray-200">
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                @endif
+
+                    @if(!$loop->last)
+                        <hr class="border-gray-100">
+                    @endif
+                @endforeach
             </div>
-        @endforeach
-    @else
-        <p style="color:#aaa">Belum ada dokumentasi untuk project ini.</p>
-    @endif
+        @else
+            <p class="text-gray-400">Belum ada dokumentasi untuk project ini.</p>
+        @endif
+    </section>
+
 @endsection
