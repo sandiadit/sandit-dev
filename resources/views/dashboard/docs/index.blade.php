@@ -22,7 +22,9 @@
             <div>
                 <strong>{{ $doc->title }}</strong>
                 <span style="font-size:0.75rem; color:#888; margin-left:0.5rem">[{{ $doc->type }}]</span>
-                <p style="margin-top:0.5rem; white-space:pre-line">{{ $doc->content }}</p>
+                <div style="margin-top:0.5rem">
+    {!! renderMarkdown($doc->content) !!}
+</div>
 
                 {{-- Tambah di sini --}}
                 @if($doc->images)
