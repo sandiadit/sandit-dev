@@ -4,11 +4,14 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\ExperienceController; // tambah ini
 use App\Http\Controllers\Dashboard\ProjectController;
 use App\Http\Controllers\Dashboard\DocController;
+use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+// Ganti route '/' yang lama
+Route::get('/', [PublicController::class, 'home'])->name('home');
+Route::get('/projects', [PublicController::class, 'projects'])->name('projects');
+Route::get('/projects/{project:slug}', [PublicController::class, 'projectDetail'])->name('projects.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard.index');
