@@ -11,7 +11,8 @@
 
         <ul style="list-style:none; display:flex; gap:1rem; margin:0; padding:0">
             <li><a href="{{ route('dashboard') }}">Dashboard</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a href="{{ route('profile.edit') }}">Profile</a></li>
+            <li><a href="{{ route('dashboard.experiences.index') }}">Experiences</a></li>
             <li><a href="#">Projects</a></li>
             <li><a href="#">Docs</a></li>
             <li><a href="#">Contact</a></li>
