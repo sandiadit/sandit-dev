@@ -11,6 +11,11 @@ class Doc extends Model
         'title',
         'content',
         'type',
+        'images',
+    ];
+
+    protected $casts = [
+        'images' => 'array',
     ];
 
     public function project()
