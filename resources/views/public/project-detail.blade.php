@@ -8,11 +8,22 @@
     <section class="bg-gray-900 text-white px-8 py-20">
         <div class="max-w-5xl mx-auto">
             <a href="{{ route('projects') }}"
-               class="text-gray-400 text-sm hover:text-indigo-400 transition mb-8 inline-block">
+                class="text-gray-400 text-sm hover:text-indigo-400 transition mb-8 inline-block">
                 ← Back to Projects
             </a>
-            <div class="flex items-start justify-between gap-8">
-                <div>
+
+            <div class="flex items-start gap-10">
+
+                {{-- Kiri: Thumbnail --}}
+                @if($project->thumbnail)
+                    <div class="shrink-0">
+                        <img src="{{ Storage::url($project->thumbnail) }}" alt="{{ $project->title }}"
+                            class="w-48 h-48 object-contain opacity-90">
+                    </div>
+                @endif
+
+                {{-- Tengah: Info --}}
+                <div class="flex-1">
                     <p class="text-indigo-400 font-semibold text-sm tracking-widest uppercase mb-3">
                         — Project Detail
                     </p>
@@ -24,26 +35,29 @@
                     @endif
                     <p class="text-gray-400 leading-relaxed max-w-xl">{{ $project->description }}</p>
                 </div>
+
+                {{-- Kanan: Status & Links --}}
                 <div class="shrink-0 flex flex-col gap-3 pt-2">
                     <span class="text-xs font-medium px-3 py-1 rounded text-center
-                        {{ $project->status === 'completed' ? 'bg-green-500 text-white' : '' }}
-                        {{ $project->status === 'ongoing' ? 'bg-indigo-500 text-white' : '' }}
-                        {{ $project->status === 'archived' ? 'bg-gray-600 text-gray-300' : '' }}">
+                                {{ $project->status === 'completed' ? 'bg-green-500 text-white' : '' }}
+                                {{ $project->status === 'ongoing' ? 'bg-indigo-500 text-white' : '' }}
+                                {{ $project->status === 'archived' ? 'bg-gray-600 text-gray-300' : '' }}">
                         {{ ucfirst($project->status) }}
                     </span>
                     @if($project->repo_url)
                         <a href="{{ $project->repo_url }}" target="_blank"
-                           class="bg-white text-gray-900 px-4 py-2 text-sm font-semibold hover:bg-indigo-400 hover:text-white transition text-center">
+                            class="bg-white text-gray-900 px-4 py-2 text-sm font-semibold hover:bg-indigo-400 hover:text-white transition text-center">
                             GitHub →
                         </a>
                     @endif
                     @if($project->demo_url)
                         <a href="{{ $project->demo_url }}" target="_blank"
-                           class="border border-white text-white px-4 py-2 text-sm font-semibold hover:bg-white hover:text-gray-900 transition text-center">
+                            class="border border-white text-white px-4 py-2 text-sm font-semibold hover:bg-white hover:text-gray-900 transition text-center">
                             Live Demo →
                         </a>
                     @endif
                 </div>
+
             </div>
         </div>
     </section>
@@ -77,8 +91,7 @@
                             @if($doc->images)
                                 <div class="flex flex-wrap gap-4 mt-6">
                                     @foreach($doc->images as $image)
-                                        <img src="{{ Storage::url($image) }}" alt=""
-                                             class="max-w-full rounded border border-gray-200">
+                                        <img src="{{ Storage::url($image) }}" alt="" class="max-w-full rounded border border-gray-200">
                                     @endforeach
                                 </div>
                             @endif
