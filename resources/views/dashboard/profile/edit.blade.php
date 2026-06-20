@@ -10,7 +10,7 @@
         <p style="color:green">{{ session('success') }}</p>
     @endif
 
-    <form action="{{ route('profile.update') }}" method="POST">
+    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -39,7 +39,22 @@
             <input type="text" name="location" value="{{ old('location', $profile->location ?? '') }}">
         </div>
 
-        <button type="submit">Save</button>
+        {{-- Tambah ini --}}
+        <div style="margin-top:1rem">
+            <label>Photo</label><br>
+            <input type="file" name="photo" accept="image/*" style="margin-top:0.25rem">
+            @error('photo') <small style="color:red">{{ $message }}</small> @enderror
+
+            @if(isset($profile) && $profile->photo)
+                <div style="margin-top:0.75rem">
+                    <img src="{{ Storage::url($profile->photo) }}" alt=""
+                        style="width:100px; height:100px; object-fit:cover; border-radius:50%; border:1px solid #ccc">
+                    <p style="font-size:0.75rem; color:#aaa; margin-top:0.25rem">Upload baru untuk mengganti foto</p>
+                </div>
+            @endif
+        </div>
+
+        <button type="submit" style="margin-top:1rem">Save</button>
     </form>
 
 @endsection
