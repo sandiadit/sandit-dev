@@ -30,15 +30,16 @@
                     </div>
                 </div>
                 <div style="display:flex; gap:1rem; margin-left:1rem">
-                    <a href="{{ route('dashboard.projects.edit', $project) }}">Edit</a>
-                    <form action="{{ route('dashboard.projects.destroy', $project) }}" method="POST"
-                          onsubmit="return confirm('Hapus project ini?')">
-                        @csrf @method('DELETE')
-                        <button type="submit" style="color:red; background:none; border:none; cursor:pointer">
-                            Hapus
-                        </button>
-                    </form>
-                </div>
+    <a href="{{ route('dashboard.projects.docs.index', $project) }}">Docs</a>
+    <a href="{{ route('dashboard.projects.edit', $project) }}">Edit</a>
+    <form action="{{ route('dashboard.projects.destroy', $project) }}" method="POST"
+          onsubmit="return confirm('Hapus project ini?')">
+        @csrf @method('DELETE')
+        <button type="submit" style="color:red; background:none; border:none; cursor:pointer">
+            Hapus
+        </button>
+    </form>
+</div>
             </div>
         </div>
     @empty

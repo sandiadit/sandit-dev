@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\ExperienceController; // tambah ini
 use App\Http\Controllers\Dashboard\ProjectController;
+use App\Http\Controllers\Dashboard\DocController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +25,10 @@ Route::middleware('auth')->group(function () {
          Route::resource('dashboard/projects', ProjectController::class)
          ->names('dashboard.projects')
          ->except(['show']);    
+
+         Route::resource('dashboard/projects.docs', DocController::class)
+         ->names('dashboard.projects.docs')
+         ->except(['show']);
 });
 
 require __DIR__.'/auth.php';
