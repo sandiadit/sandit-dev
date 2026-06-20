@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\Doc;
 use App\Models\Project;
+use App\Repositories\Contracts\DocRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class DocController extends Controller
 {
+    public function __construct(
+        private DocRepositoryInterface $docRepository
+    ) {}
+
     public function index(Project $project)
     {
-        $docs = $project->docs()->latest()->get();
+        $docs = $this->docRepository->getByProject($project);
         return view('dashboard.docs.index', compact('project', 'docs'));
     }
 
@@ -37,7 +42,7 @@ class DocController extends Controller
             }
         }
 
-        Doc::create([
+        $this->docRepository->create([
             'project_id' => $project->id,
             'title'      => $validated['title'],
             'content'    => $validated['content'],
@@ -70,7 +75,6 @@ class DocController extends Controller
             }
         }
 
-        // Hapus gambar yang di-centang untuk dihapus
         if ($request->has('delete_images')) {
             foreach ($request->delete_images as $path) {
                 Storage::disk('public')->delete($path);
@@ -78,7 +82,7 @@ class DocController extends Controller
             }
         }
 
-        $doc->update([
+        $this->docRepository->update($doc, [
             'title'   => $validated['title'],
             'content' => $validated['content'],
             'type'    => $validated['type'],
@@ -91,14 +95,13 @@ class DocController extends Controller
 
     public function destroy(Project $project, Doc $doc)
     {
-        // Hapus semua gambar terkait
         if ($doc->images) {
             foreach ($doc->images as $path) {
                 Storage::disk('public')->delete($path);
             }
         }
 
-        $doc->delete();
+        $this->docRepository->delete($doc);
 
         return redirect()->route('dashboard.projects.docs.index', $project)
                          ->with('success', 'Doc berhasil dihapus.');

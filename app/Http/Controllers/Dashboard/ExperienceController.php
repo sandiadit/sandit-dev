@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-// app/Http/Controllers/Dashboard/ExperienceController.php
 use App\Http\Controllers\Controller;
 use App\Models\Experience;
+use App\Repositories\Contracts\ExperienceRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ExperienceController extends Controller
 {
+    public function __construct(
+        private ExperienceRepositoryInterface $experienceRepository
+    ) {}
+
     public function index()
     {
-        $experiences = Experience::latest()->get();
+        $experiences = $this->experienceRepository->getAll();
         return view('dashboard.experiences.index', compact('experiences'));
     }
 
@@ -30,7 +34,7 @@ class ExperienceController extends Controller
             'end_date'    => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        Experience::create($validated);
+        $this->experienceRepository->create($validated);
 
         return redirect()->route('dashboard.experiences.index')
                          ->with('success', 'Experience berhasil ditambahkan.');
@@ -51,7 +55,7 @@ class ExperienceController extends Controller
             'end_date'    => 'nullable|date|after_or_equal:start_date',
         ]);
 
-        $experience->update($validated);
+        $this->experienceRepository->update($experience, $validated);
 
         return redirect()->route('dashboard.experiences.index')
                          ->with('success', 'Experience berhasil diupdate.');
@@ -59,7 +63,7 @@ class ExperienceController extends Controller
 
     public function destroy(Experience $experience)
     {
-        $experience->delete();
+        $this->experienceRepository->delete($experience);
 
         return redirect()->route('dashboard.experiences.index')
                          ->with('success', 'Experience berhasil dihapus.');

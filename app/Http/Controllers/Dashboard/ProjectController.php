@@ -4,14 +4,19 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Repositories\Contracts\ProjectRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
+    public function __construct(
+        private ProjectRepositoryInterface $projectRepository
+    ) {}
+
     public function index()
     {
-        $projects = Project::latest()->get();
+        $projects = $this->projectRepository->getAll();
         return view('dashboard.projects.index', compact('projects'));
     }
 
@@ -33,7 +38,7 @@ class ProjectController extends Controller
 
         $validated['slug'] = Str::slug($validated['title']);
 
-        Project::create($validated);
+        $this->projectRepository->create($validated);
 
         return redirect()->route('dashboard.projects.index')
                          ->with('success', 'Project berhasil ditambahkan.');
@@ -57,7 +62,7 @@ class ProjectController extends Controller
 
         $validated['slug'] = Str::slug($validated['title']);
 
-        $project->update($validated);
+        $this->projectRepository->update($project, $validated);
 
         return redirect()->route('dashboard.projects.index')
                          ->with('success', 'Project berhasil diupdate.');
@@ -65,7 +70,7 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        $project->delete();
+        $this->projectRepository->delete($project);
 
         return redirect()->route('dashboard.projects.index')
                          ->with('success', 'Project berhasil dihapus.');
