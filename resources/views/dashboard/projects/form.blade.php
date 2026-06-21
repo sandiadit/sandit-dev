@@ -73,18 +73,46 @@
             {{-- Thumbnail --}}
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Thumbnail</label>
+
+                {{-- Preview area --}}
+                <div id="thumbnailPreviewWrapper" class="{{ isset($project) && $project->thumbnail ? '' : 'hidden' }} mb-3 relative group/thumb inline-block">
+                    <img
+                        id="thumbnailPreview"
+                        src="{{ isset($project) && $project->thumbnail ? Storage::url($project->thumbnail) : '' }}"
+                        alt="Thumbnail preview"
+                        class="w-48 h-28 object-cover rounded border border-gray-200">
+                    <button
+                        type="button"
+                        id="clearThumbnail"
+                        onclick="clearThumbnailPreview()"
+                        class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover/thumb:opacity-100 transition text-xs leading-none">
+                        ✕
+                    </button>
+                    <p id="thumbnailPreviewName" class="text-[10px] text-gray-400 mt-1 truncate max-w-[192px]"></p>
+                </div>
+
+                {{-- Drop zone (shown when no preview) --}}
+                <label for="thumbnailInput"
+                    id="thumbnailDropZone"
+                    class="{{ isset($project) && $project->thumbnail ? 'hidden' : '' }} flex flex-col items-center justify-center w-full border-2 border-dashed border-gray-200 rounded-lg py-8 px-4 cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30 transition group">
+                    <svg class="w-8 h-8 text-gray-300 group-hover:text-indigo-400 transition mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                    <p class="text-sm text-gray-500 group-hover:text-indigo-600 transition font-medium">Klik untuk pilih thumbnail</p>
+                    <p class="text-xs text-gray-400 mt-1">PNG, JPG, WEBP — maks. 2MB</p>
+                    <input id="thumbnailInput" type="file" name="thumbnail" accept="image/*" class="hidden" onchange="previewThumbnail(this)">
+                </label>
+
                 @if(isset($project) && $project->thumbnail)
-                    <div class="mb-3">
-                        <img src="{{ Storage::url($project->thumbnail) }}" alt=""
-                            class="w-48 h-28 object-cover rounded border border-gray-200">
-                    </div>
+                    {{-- Hidden input still needs the file picker for edit mode --}}
+                    <input id="thumbnailInput" type="file" name="thumbnail" accept="image/*" class="hidden" onchange="previewThumbnail(this)">
+                    <button type="button" onclick="document.getElementById('thumbnailInput').click()"
+                        class="mt-2 text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition">
+                        Ganti Thumbnail
+                    </button>
                 @endif
-                <input type="file" name="thumbnail" accept="image/*"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100 transition cursor-pointer">
-                @if(isset($project) && $project->thumbnail)
-                    <p class="text-xs text-gray-400 mt-2">Upload gambar baru untuk mengganti thumbnail.</p>
-                @endif
-                @error('thumbnail') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+
+                @error('thumbnail') <p class="text-red-500 text-xs mt-2">{{ $message }}</p> @enderror
             </div>
 
             {{-- Submit --}}
@@ -98,4 +126,43 @@
             </div>
         </form>
     </div>
+
 @endsection
+
+@push('scripts')
+<script>
+    function previewThumbnail(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        if (!file.type.startsWith('image/')) return;
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const wrapper = document.getElementById('thumbnailPreviewWrapper');
+            const preview = document.getElementById('thumbnailPreview');
+            const nameEl  = document.getElementById('thumbnailPreviewName');
+            const dropzone = document.getElementById('thumbnailDropZone');
+
+            preview.src = e.target.result;
+            nameEl.textContent = file.name;
+            wrapper.classList.remove('hidden');
+            if (dropzone) dropzone.classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearThumbnailPreview() {
+        const wrapper  = document.getElementById('thumbnailPreviewWrapper');
+        const preview  = document.getElementById('thumbnailPreview');
+        const nameEl   = document.getElementById('thumbnailPreviewName');
+        const dropzone = document.getElementById('thumbnailDropZone');
+        const input    = document.getElementById('thumbnailInput');
+
+        preview.src = '';
+        nameEl.textContent = '';
+        if (input) input.value = '';
+        wrapper.classList.add('hidden');
+        if (dropzone) dropzone.classList.remove('hidden');
+    }
+</script>
+@endpush

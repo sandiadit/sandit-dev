@@ -6,29 +6,121 @@
     <title>@yield('title') — Personal Hub</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        /* Smooth scrolling behavior */
         html { scroll-behavior: smooth; }
-        /* Custom Selection */
         ::selection { background: #6366f1; color: white; }
+
+        /* Hide mobile menu initially without flash */
+        #mobileMenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #mobileMenu.open {
+            max-height: 400px;
+        }
+
+        /* Hamburger line animation */
+        .hamburger-line {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #111827;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+            transform-origin: center;
+        }
+        #mobileMenuToggle.is-open .hamburger-line:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        #mobileMenuToggle.is-open .hamburger-line:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+        #mobileMenuToggle.is-open .hamburger-line:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
     </style>
     @stack('styles')
 </head>
 <body id="top" class="bg-[#fafafa] text-gray-900 font-sans antialiased overflow-x-hidden selection:bg-indigo-500 selection:text-white">
 
     {{-- Navbar --}}
-    <nav class="fixed w-full top-0 z-50 bg-white/70 backdrop-blur-md border-b border-gray-200/50 transition-all duration-300 px-6 md:px-8 py-4 flex justify-between items-center">
-        <a href="{{ request()->routeIs('home') ? '#top' : route('home') }}" class="text-xl font-black tracking-tighter flex items-center gap-1 group">
-            sandi<span class="text-indigo-600 transition duration-300 group-hover:text-fuchsia-500">.</span>dev
-            <span class="text-xl ml-1 group-hover:rotate-[20deg] transition duration-300">👋</span>
-        </a>
-        <ul class="hidden md:flex gap-8 text-sm font-semibold text-gray-600">
-            <li><a href="{{ request()->routeIs('home') ? '#top' : route('home') }}" class="hover:text-indigo-600 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-600 hover:after:w-full after:transition-all after:duration-300">Home</a></li>
-            <li><a href="{{ request()->routeIs('home') ? '#projects' : route('home') . '#projects' }}" class="hover:text-indigo-600 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-600 hover:after:w-full after:transition-all after:duration-300">Projects</a></li>
-            <li><a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}" class="hover:text-indigo-600 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-600 hover:after:w-full after:transition-all after:duration-300">Contact</a></li>
-        </ul>
-        <div class="md:hidden">
-            {{-- Mobile Menu Button (Optional to implement fully later, keeping simple for now) --}}
-            <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+    <nav id="mainNav" class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60 transition-all duration-300">
+        <div class="px-6 md:px-8 py-4 flex justify-between items-center max-w-7xl mx-auto">
+
+            {{-- Logo --}}
+            <a href="{{ request()->routeIs('home') ? '#top' : route('home') }}" class="text-xl font-black tracking-tighter flex items-center gap-1 group">
+                sandi<span class="text-indigo-600 transition duration-300 group-hover:text-fuchsia-500">.</span>dev
+                <span class="text-xl ml-1 group-hover:rotate-[20deg] transition duration-300">👋</span>
+            </a>
+
+            {{-- Desktop Menu --}}
+            <ul class="hidden md:flex gap-8 text-sm font-semibold text-gray-600">
+                <li>
+                    <a href="{{ request()->routeIs('home') ? '#top' : route('home') }}"
+                        class="hover:text-indigo-600 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-600 hover:after:w-full after:transition-all after:duration-300">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ request()->routeIs('home') ? '#projects' : route('home') . '#projects' }}"
+                        class="hover:text-indigo-600 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-600 hover:after:w-full after:transition-all after:duration-300">
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}"
+                        class="hover:text-indigo-600 transition relative after:absolute after:-bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-indigo-600 hover:after:w-full after:transition-all after:duration-300">
+                        Contact
+                    </a>
+                </li>
+            </ul>
+
+            {{-- Mobile Hamburger Button --}}
+            <button
+                id="mobileMenuToggle"
+                aria-label="Toggle navigation menu"
+                aria-expanded="false"
+                aria-controls="mobileMenu"
+                class="md:hidden flex flex-col justify-center items-center gap-[5px] w-10 h-10 rounded-lg hover:bg-gray-100 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            >
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
+
+        {{-- Mobile Dropdown Menu --}}
+        <div id="mobileMenu" class="md:hidden bg-white/95 backdrop-blur-md border-t border-gray-100">
+            <ul class="flex flex-col px-4 py-3 max-w-7xl mx-auto">
+                <li>
+                    <a href="{{ request()->routeIs('home') ? '#top' : route('home') }}"
+                        class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ request()->routeIs('home') ? '#projects' : route('home') . '#projects' }}"
+                        class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ request()->routeIs('home') ? '#contact' : route('home') . '#contact' }}"
+                        class="mobile-nav-link flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
+                        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Contact
+                    </a>
+                </li>
+            </ul>
         </div>
     </nav>
 
@@ -44,6 +136,52 @@
             <span class="text-sm font-medium">© {{ date('Y') }} — Built with ☕ and Laravel</span>
         </div>
     </footer>
+
+    <script>
+        (function () {
+            const toggle = document.getElementById('mobileMenuToggle');
+            const menu   = document.getElementById('mobileMenu');
+            let isOpen   = false;
+
+            function open() {
+                isOpen = true;
+                menu.classList.add('open');
+                toggle.classList.add('is-open');
+                toggle.setAttribute('aria-expanded', 'true');
+            }
+
+            function close() {
+                isOpen = false;
+                menu.classList.remove('open');
+                toggle.classList.remove('is-open');
+                toggle.setAttribute('aria-expanded', 'false');
+            }
+
+            toggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                isOpen ? close() : open();
+            });
+
+            // Close on any mobile nav link click
+            document.querySelectorAll('.mobile-nav-link').forEach(function (link) {
+                link.addEventListener('click', close);
+            });
+
+            // Close on outside click
+            document.addEventListener('click', function (e) {
+                if (isOpen && !document.getElementById('mainNav').contains(e.target)) {
+                    close();
+                }
+            });
+
+            // Close on resize to desktop breakpoint
+            window.addEventListener('resize', function () {
+                if (window.innerWidth >= 768 && isOpen) {
+                    close();
+                }
+            });
+        })();
+    </script>
 
     @stack('scripts')
 </body>
