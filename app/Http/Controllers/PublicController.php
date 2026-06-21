@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Repositories\Contracts\ExperienceRepositoryInterface;
 use App\Repositories\Contracts\ProfileRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Repositories\Contracts\CertificateRepositoryInterface;
 
 class PublicController extends Controller
 {
@@ -13,16 +14,18 @@ class PublicController extends Controller
         private ProjectRepositoryInterface $projectRepository,
         private ExperienceRepositoryInterface $experienceRepository,
         private ProfileRepositoryInterface $profileRepository,
-    ) {}
+        private CertificateRepositoryInterface $certificateRepository,
+    ) {
+    }
 
     public function home()
     {
         $profile = $this->profileRepository->get();
         $experiences = $this->experienceRepository->getAll();
-        $allProjects = $this->projectRepository->getPublic();
-        $latestProjects = $allProjects->take(3);
-        $projectsCount = $allProjects->count();
-        return view('public.home', compact('profile', 'experiences', 'latestProjects', 'projectsCount'));
+        $projectsCount = $this->projectRepository->getPublic()->count();
+        $latestProjects = $this->projectRepository->getPublic()->take(3);
+        $featuredCertificates = $this->certificateRepository->getFeatured(); // tambah ini
+        return view('public.home', compact('profile', 'experiences', 'projectsCount', 'latestProjects', 'featuredCertificates'));
     }
 
     public function projects()
@@ -35,5 +38,11 @@ class PublicController extends Controller
     {
         $docs = $project->docs()->latest()->get();
         return view('public.project-detail', compact('project', 'docs'));
+    }
+
+    public function certificates()
+    {
+        $certificates = $this->certificateRepository->getAll();
+        return view('public.certificates', compact('certificates'));
     }
 }

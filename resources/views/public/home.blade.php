@@ -199,7 +199,8 @@
                             </div>
 
                             <h3 class="text-2xl font-bold mb-3 text-gray-900 group-hover:text-indigo-600 transition">
-                                {{ $project->title }}</h3>
+                                {{ $project->title }}
+                            </h3>
                             <p class="text-gray-500 text-sm mb-8 flex-grow leading-relaxed">{{ $project->description }}</p>
 
                             <div class="flex flex-wrap gap-2 mb-8">
@@ -233,6 +234,83 @@
         </section>
     @endif
 
+    {{-- Featured Certificates --}}
+    <section id="certificates" class="max-w-5xl mx-auto px-6 md:px-8 py-20 md:py-24">
+        @if(isset($featuredCertificates) && $featuredCertificates->count())
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 reveal">
+                    <div>
+                        <p class="text-indigo-600 font-semibold text-sm tracking-widest uppercase mb-2">— Achievements</p>
+                        <h2 class="text-4xl font-bold text-gray-900 tracking-tight">Certificates</h2>
+                    </div>
+                    <a href="{{ route('certificates') }}"
+                        class="hidden md:inline-flex items-center gap-2 text-indigo-600 font-bold hover:text-indigo-800 transition group mt-4 md:mt-0">
+                        View All
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($featuredCertificates as $cert)
+                        <div
+                            class="bg-white border border-gray-200 rounded p-5 flex flex-col gap-4 group hover:border-indigo-400 hover:shadow-md transition duration-300 reveal">
+
+                            @if($cert->image)
+                                <div class="overflow-hidden rounded border border-gray-100">
+                                    <img src="{{ Storage::url($cert->image) }}" alt="{{ $cert->name }}"
+                                        class="w-full h-36 object-cover group-hover:scale-105 transition duration-500">
+                                </div>
+                            @else
+                                <div class="w-full h-36 bg-indigo-50 rounded border border-indigo-100 flex items-center justify-center">
+                                    <svg class="w-10 h-10 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                                    </svg>
+                                </div>
+                            @endif
+
+                            <div class="flex-1">
+                                <h3 class="font-bold text-gray-900 group-hover:text-indigo-600 transition text-sm leading-snug mb-1">
+                                    {{ $cert->name }}
+                                </h3>
+                                <p class="text-xs text-indigo-500 font-medium mb-2">{{ $cert->issuer }}</p>
+                                <p class="text-xs text-gray-400">
+                                    {{ $cert->issued_date->format('M Y') }}
+                                    @if($cert->expired_date)
+                                        — {{ $cert->expired_date->format('M Y') }}
+                                    @else
+                                        · No Expiry
+                                    @endif
+                                </p>
+                            </div>
+
+                            @if($cert->credential_url)
+                                <a href="{{ $cert->credential_url }}" target="_blank"
+                                    class="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 transition uppercase tracking-wider">
+                                    Verify Certificate
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="mt-10 md:hidden reveal">
+                    <a href="{{ route('certificates') }}"
+                        class="inline-flex items-center gap-2 border border-gray-900 text-gray-900 px-6 py-3 font-semibold text-sm w-full justify-center hover:bg-gray-900 hover:text-white transition">
+                        View All Certificates
+                    </a>
+                </div>
+
+            </section>
+        @else
+        <p class="text-gray-400 text-center py-12">Belum ada certificate yang ditampilkan.</p>
+    @endif
     {{-- Contact --}}
     <section id="contact" class="bg-gray-900 text-white px-6 md:px-8 py-20 md:py-32">
         <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 reveal">
