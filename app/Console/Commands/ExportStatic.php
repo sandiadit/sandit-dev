@@ -37,7 +37,7 @@ class ExportStatic extends Command
 
     public function handle(): int
     {
-        $this->distPath = base_path('dist');
+        $this->distPath = base_path('docs');
 
         $this->printHeader();
 
