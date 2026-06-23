@@ -110,7 +110,7 @@ class ExportStatic extends Command
                 ->each(fn($dir) => File::deleteDirectory($dir));
 
             collect(File::files($this->distPath))
-                ->reject(fn($file) => $file->getFilename() === '.gitkeep')
+                ->reject(fn($file) => in_array($file->getFilename(), ['.gitkeep', 'CNAME']))
                 ->each(fn($file) => File::delete($file->getPathname()));
         } else {
             File::makeDirectory($this->distPath, 0755, true);
