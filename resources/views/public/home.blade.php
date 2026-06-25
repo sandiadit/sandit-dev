@@ -47,11 +47,11 @@
             </p>
             <div class="flex flex-wrap gap-3">
                 <a href="#projects"
-                    class="bg-indigo-600 text-white px-6 py-3 font-semibold text-sm hover:bg-indigo-700 transition duration-300 shadow-sm">
+                    class="bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold text-sm hover:bg-indigo-700 hover:-translate-y-0.5 transition-all duration-300 shadow-sm hover:shadow-md">
                     View Projects →
                 </a>
                 <a href="#contact"
-                    class="border border-gray-900 text-gray-900 px-6 py-3 font-semibold text-sm hover:bg-gray-900 hover:text-white transition duration-300 shadow-sm">
+                    class="border border-gray-900 text-gray-900 px-6 py-3 rounded-lg font-semibold text-sm hover:bg-gray-900 hover:text-white hover:-translate-y-0.5 transition-all duration-300 shadow-sm hover:shadow-md">
                     Contact Me
                 </a>
             </div>
@@ -97,7 +97,8 @@
                 @if($profile?->location)
                     <p class="text-2xl md:text-4xl font-bold text-indigo-400">📍</p>
                     <p class="text-gray-400 text-xs md:text-sm mt-2 tracking-wider uppercase font-semibold leading-tight">
-                        {{ $profile->location }}</p>
+                        {{ $profile->location }}
+                    </p>
                 @endif
             </div>
         </div>
@@ -144,7 +145,7 @@
                                         class="absolute -right-[5px] top-1.5 w-2.5 h-2.5 bg-white border-2 border-gray-300 rounded-full group-hover:border-indigo-600 group-hover:bg-indigo-600 transition duration-300">
                                     </div>
                                 </div>
-                                <div class="pl-10">
+                                <div class="pl-10 group-hover:translate-x-1 transition-transform duration-300">
                                     <div class="flex items-start justify-between gap-4 mb-2">
                                         <div>
                                             <h3
@@ -155,7 +156,7 @@
                                                 <span class="text-gray-500 font-medium text-sm">{{ $exp->company }}</span>
                                                 @if(!$exp->end_date)
                                                     <span
-                                                        class="text-xs font-semibold px-2 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-100">Current</span>
+                                                        class="text-xs font-semibold px-2 py-0.5 bg-indigo-50 rounded text-indigo-600 border border-indigo-100">Current</span>
                                                 @endif
                                             </div>
                                         </div>
@@ -212,7 +213,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     @foreach($latestProjects as $project)
                         <div
-                            class="bg-white border border-gray-200 p-6 md:p-8 flex flex-col group hover:border-indigo-600 hover:shadow-xl transition duration-300 reveal">
+                            class="bg-white border border-gray-200 rounded-xl p-6 md:p-8 flex flex-col group hover:border-indigo-600 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 reveal">
                             <div class="flex justify-between items-start mb-5 md:mb-6">
                                 <span class="text-xs font-bold px-2 py-1 bg-gray-100 text-gray-700 uppercase tracking-wider">
                                     {{ $project->status }}
@@ -281,7 +282,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
                 @foreach($featuredCertificates as $cert)
                     <div
-                        class="bg-white border border-gray-200 rounded p-4 md:p-5 flex flex-col gap-4 group hover:border-indigo-400 hover:shadow-md transition duration-300 reveal">
+                        class="bg-white border border-gray-200 rounded-xl p-4 md:p-5 flex flex-col gap-4 group hover:border-indigo-400 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 reveal">
 
                         @if($cert->image)
                             <div class="overflow-hidden rounded border border-gray-100">
@@ -351,9 +352,9 @@
                 </p>
                 <div class="space-y-5 md:space-y-6">
                     <a href="mailto:{{ $profile->email ?? 'youremail@gmail.com' }}"
-                        class="flex items-center gap-4 md:gap-6 group">
+                        class="flex items-center gap-4 md:gap-6 group hover:translate-x-2 transition-transform duration-300">
                         <div
-                            class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
+                            class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-white transition" fill="none"
                                 stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -369,9 +370,10 @@
                         </div>
                     </a>
 
-                    <a href="https://github.com/sandiadit" target="_blank" class="flex items-center gap-4 md:gap-6 group">
+                    <a href="https://github.com/sandiadit" target="_blank"
+                        class="flex items-center gap-4 md:gap-6 group hover:translate-x-2 transition-transform duration-300">
                         <div
-                            class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
+                            class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-white transition"
                                 fill="currentColor" viewBox="0 0 24 24">
                                 <path
@@ -388,9 +390,9 @@
                     </a>
 
                     <a href="https://linkedin.com/in/sandi-aditia" target="_blank"
-                        class="flex items-center gap-4 md:gap-6 group">
+                        class="flex items-center gap-4 md:gap-6 group hover:translate-x-2 transition-transform duration-300">
                         <div
-                            class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
+                            class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-white transition"
                                 fill="currentColor" viewBox="0 0 24 24">
                                 <path
