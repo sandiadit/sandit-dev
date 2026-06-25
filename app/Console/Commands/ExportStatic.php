@@ -16,7 +16,7 @@ class ExportStatic extends Command
     protected $description = 'Export Laravel ke HTML statis lalu push ke GitHub Pages';
 
     // Base URL server lokal yang sedang jalan
-    private string $baseUrl = 'http://127.0.0.1:8000';
+    private string $baseUrl;
 
     // Folder output hasil export
     private string $distPath;
@@ -37,6 +37,7 @@ class ExportStatic extends Command
 
     public function handle(): int
     {
+        $this->baseUrl = rtrim(env('STATIC_EXPORT_BASE_URL', 'http://127.0.0.1:8000'), '/');
         $this->distPath = base_path('docs');
 
         $this->printHeader();
@@ -234,6 +235,14 @@ class ExportStatic extends Command
             $filePath = $dir . '/index.html';
         }
 
+        // Fix URL asset dari Vite yang hardcode localhost
+        $html = str_replace($this->baseUrl . '/', '/', $html);
+        $html = str_replace($this->baseUrl, '/', $html);
+        $html = str_replace('http://localhost:8000/', '/', $html);
+        $html = str_replace('http://localhost:8000', '/', $html);
+        $html = str_replace('http://localhost/', '/', $html);
+        $html = str_replace('http://localhost', '/', $html);
+
         File::put($filePath, $html);
     }
 
@@ -362,9 +371,10 @@ class ExportStatic extends Command
 
         $message = $this->option('message') ?: 'deploy: ' . now()->format('Y-m-d H:i:s');
 
-        exec('git add dist/ 2>&1', $addOut, $addCode);
+        exec('git add docs/ 2>&1', $addOut, $addCode);
 
-        exec("git commit -m \"{$message}\" 2>&1", $commitOut, $commitCode);
+        $messageEscaped = escapeshellarg($message);
+        exec("git commit -m {$messageEscaped} 2>&1", $commitOut, $commitCode);
 
         $commitMsg = implode('', $commitOut);
         if ($commitCode !== 0 && !str_contains($commitMsg, 'nothing to commit')) {

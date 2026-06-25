@@ -64,6 +64,7 @@
 
                         </div>
                     </div>
+                </div>
             </a>
         @empty
             <p class="text-gray-400 py-12">Belum ada project.</p>
