@@ -234,6 +234,10 @@ class ExportStatic extends Command
             $filePath = $dir . '/index.html';
         }
 
+        $html = str_replace('http://127.0.0.1:8000', '', $html);
+        $html = str_replace('http://localhost:8000', '', $html);
+        $html = str_replace('http://localhost', '', $html);
+
         File::put($filePath, $html);
     }
 
@@ -251,10 +255,16 @@ class ExportStatic extends Command
                 str_starts_with($href, '#') ||
                 str_starts_with($href, 'mailto:') ||
                 str_starts_with($href, 'tel:') ||
-                str_starts_with($href, 'http') ||
+                (str_starts_with($href, 'http') && !str_starts_with($href, $this->baseUrl)) ||
                 str_starts_with($href, '//')
             ) {
                 continue;
+            }
+
+            // Normalize path
+            // Kalau href adalah full URL baseUrl, ambil path-nya saja
+            if (str_starts_with($href, $this->baseUrl)) {
+                $href = substr($href, strlen($this->baseUrl));
             }
 
             // Normalize path
@@ -362,7 +372,7 @@ class ExportStatic extends Command
 
         $message = $this->option('message') ?: 'deploy: ' . now()->format('Y-m-d H:i:s');
 
-        exec('git add dist/ 2>&1', $addOut, $addCode);
+        exec('git add docs/ 2>&1', $addOut, $addCode);
 
         exec("git commit -m \"{$message}\" 2>&1", $commitOut, $commitCode);
 
