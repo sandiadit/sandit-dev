@@ -40,6 +40,12 @@ class PublicController extends Controller
         return view('public.project-detail', compact('project', 'docs'));
     }
 
+    public function contact()
+    {
+        $profile = $this->profileRepository->get();
+        return view('contact.index', compact('profile'));
+    }
+
     public function certificates()
     {
         $certificates = $this->certificateRepository->getAll();

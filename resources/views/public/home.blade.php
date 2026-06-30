@@ -351,8 +351,10 @@
                     Feel free to reach out through any of the channels below.
                 </p>
                 <div class="space-y-5 md:space-y-6">
-                    <a href="mailto:{{ $profile->email ?? 'youremail@gmail.com' }}"
-                        class="flex items-center gap-4 md:gap-6 group hover:translate-x-2 transition-transform duration-300">
+                    {{-- Email --}}
+                    @if($profile?->email)
+                    <a href="mailto:{{ $profile->email }}"
+                        class="flex items-center gap-4 md:gap-6 group">
                         <div
                             class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-white transition" fill="none"
@@ -363,15 +365,16 @@
                         </div>
                         <div class="min-w-0">
                             <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">Email</p>
-                            <p
-                                class="text-white font-medium text-base md:text-lg group-hover:text-indigo-400 transition truncate">
-                                {{ $profile->email ?? 'hello@domain.com' }}
+                            <p class="text-white font-medium text-base md:text-lg group-hover:text-indigo-400 transition truncate">
+                                {{ $profile->email }}
                             </p>
                         </div>
                     </a>
+                    @endif
 
-                    <a href="https://github.com/sandiadit" target="_blank"
-                        class="flex items-center gap-4 md:gap-6 group hover:translate-x-2 transition-transform duration-300">
+                    {{-- GitHub --}}
+                    @if($profile?->github_url)
+                    <a href="{{ $profile->github_url }}" target="_blank" class="flex items-center gap-4 md:gap-6 group">
                         <div
                             class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-white transition"
@@ -382,15 +385,17 @@
                         </div>
                         <div class="min-w-0">
                             <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">GitHub</p>
-                            <p
-                                class="text-white font-medium text-base md:text-lg group-hover:text-indigo-400 transition truncate">
-                                github.com/sandiadit
+                            <p class="text-white font-medium text-base md:text-lg group-hover:text-indigo-400 transition truncate">
+                                {{ str_replace(['https://', 'http://'], '', $profile->github_url) }}
                             </p>
                         </div>
                     </a>
+                    @endif
 
-                    <a href="https://linkedin.com/in/sandi-aditia" target="_blank"
-                        class="flex items-center gap-4 md:gap-6 group hover:translate-x-2 transition-transform duration-300">
+                    {{-- LinkedIn --}}
+                    @if($profile?->linkedin_url)
+                    <a href="{{ $profile->linkedin_url }}" target="_blank"
+                        class="flex items-center gap-4 md:gap-6 group">
                         <div
                             class="w-12 h-12 md:w-14 md:h-14 bg-gray-800 rounded-xl flex items-center justify-center border border-gray-700 group-hover:bg-indigo-600 group-hover:border-indigo-600 transition duration-300 shrink-0">
                             <svg class="w-5 h-5 md:w-6 md:h-6 text-gray-300 group-hover:text-white transition"
@@ -401,12 +406,12 @@
                         </div>
                         <div class="min-w-0">
                             <p class="text-xs text-gray-500 uppercase tracking-widest font-semibold mb-1">LinkedIn</p>
-                            <p
-                                class="text-white font-medium text-base md:text-lg group-hover:text-indigo-400 transition truncate">
-                                linkedin.com/in/sandi-aditia
+                            <p class="text-white font-medium text-base md:text-lg group-hover:text-indigo-400 transition truncate">
+                                {{ str_replace(['https://', 'http://'], '', $profile->linkedin_url) }}
                             </p>
                         </div>
                     </a>
+                    @endif
                 </div>
             </div>
 
