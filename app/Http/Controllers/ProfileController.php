@@ -21,12 +21,15 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'full_name' => 'required|string|max:255',
-            'headline'  => 'nullable|string|max:255',
-            'bio'       => 'nullable|string',
-            'email'     => 'nullable|email',
-            'location'  => 'nullable|string|max:255',
-            'photo'     => 'nullable|image|max:2048',
+            'full_name'    => 'required|string|max:255',
+            'headline'     => 'nullable|string|max:255',
+            'bio'          => 'nullable|string',
+            'email'        => 'nullable|email',
+            'location'     => 'nullable|string|max:255',
+            'photo'        => 'nullable|image|max:2048',
+            'github_url'   => 'nullable|url|max:255',
+            'linkedin_url' => 'nullable|url|max:255',
+            'resume_url'   => 'nullable|url|max:255',
         ]);
 
         if ($request->hasFile('photo')) {
